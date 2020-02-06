@@ -26,13 +26,12 @@ void travel(TreeNode* p, size_t d, vector<vector<int>>& v) {
     }
 }
 
-vector<vector<int>> levelOrderBottom(TreeNode* root) {
+vector<vector<int>> levelOrder(TreeNode* root) {
     vector<vector<int>> v;
     if (!root) { return v; }
     if (v.size() < 1) { v.emplace_back(vector<int>()); }
     v[0].push_back(root->val);
     travel(root, 1, v);
-    reverse(v.begin(), v.end());
     return v;
 }
 
@@ -40,9 +39,9 @@ int main()
 {
     vector<int> i = { 3,9,20,-1,-1,15,7 };
     vector<vector<int>> o = {
-        {15,7} ,
+        {3},
         {9,20},
-        {3}
-    }; 
-    assert(levelOrderBottom(construct(i)) == o);
+        {15,7},
+    };
+    assert(levelOrder(construct(i)) == o);
 }
