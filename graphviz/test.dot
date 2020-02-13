@@ -1,0 +1,12 @@
+digraph test {
+	A [label = "1"]; 
+	B [label = "2"];  
+	C [label = "3"];  
+	D [label = "null"];  
+	E [label = "4"];  
+	
+	A -> B;
+	A -> C;
+	B -> D;
+	B -> E;
+}
