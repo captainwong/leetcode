@@ -1,11 +1,27 @@
 #include "../common/TreeNode.h"
 #include "../common/graph.h"
 
+int maxSide = 0;
+
+// 计算最大单边
 int maxSides(TreeNode* node) {
     if (!node) { return 0; }
-    int sides = max(maxSides(node->left), maxSides(node->right));
+    int sides = 0; int l = 0, r = 0, totalSides = 0;
     if (node->left || node->right) {
         sides++;
+    }
+    if (node->left) {
+        totalSides++;
+        l = maxSides(node->left);
+    }
+    if (node->right) {
+        totalSides++;
+        r = maxSides(node->right);
+    }
+    sides += max(l, r);
+    totalSides += l + r;
+    if (totalSides > maxSide) {
+        maxSide = totalSides;
     }
     return sides;
 }
@@ -21,14 +37,14 @@ int diameterOfBinaryTree(TreeNode* node) {
         sides++;
         sides += maxSides(node->right);
     }
-    return sides;
+    return max(sides, maxSide);
 }
 
 
 int main()
 {
-    //assert(diameterOfBinaryTree(TreeNode::construct({ 1,2,3,4,5 })) == 3);
-    //assert(diameterOfBinaryTree(TreeNode::construct({ 2,1,4,3,-1,5 })) == 4);
+    assert(diameterOfBinaryTree(TreeNode::construct({ 1,2,3,4,5 })) == 3);
+    assert(diameterOfBinaryTree(TreeNode::construct({ 2,1,4,3,-1,5 })) == 4);
     auto node = TreeNode::construct(
         convertLeetcodeInputToStringV(
             "[4,-7,-3,null,null,-9,-3,9,-7,-4,null,6,null,-6,-6,null,null,0,6,5,null,9,null,null,-1,-4,null,null,null,-2]"

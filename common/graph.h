@@ -4,13 +4,14 @@
 #include <stdlib.h>
 #include <fstream>
 
-static void toPng(TreeNode* root, string fname = "TreeNode") {
+static void toPng(TreeNode* root, string fname = "TreeNode", bool showNullNodes = false) {
     if (!root) { return; }
     string dot = "digraph " + fname + "{\n";
     vector<string> declares;
     vector<string> points;
     queue<TreeNode*> q;
     q.push(root);
+    size_t nullIndex = 0;
     while (!q.empty()) {
         auto p = q.front(); q.pop();
         auto name = string("node") + to_string(size_t(p));
@@ -18,10 +19,18 @@ static void toPng(TreeNode* root, string fname = "TreeNode") {
         if (p->left) {
             q.push(p->left);
             points.push_back(name + " -> " + string("node") + to_string(size_t(p->left)) + "\n");
+        } else if (p->right && showNullNodes) {
+            auto nullName = string("node") + to_string(nullIndex++);
+            declares.push_back(nullName + " [label=\"null\"];\n");
+            points.push_back(name + " -> " + nullName + "\n");
         }
         if (p->right) {
             q.push(p->right);
             points.push_back(name + " -> " + string("node") + to_string(size_t(p->right)) + "\n");
+        } else if (p->left && showNullNodes) {
+            auto nullName = string("node") + to_string(nullIndex++);
+            declares.push_back(nullName + " [label=\"null\"];\n");
+            points.push_back(name + " -> " + nullName + "\n");
         }
     }
     for (auto d : declares) {
