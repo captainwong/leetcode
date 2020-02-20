@@ -30,6 +30,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{EC6A06E4-7B23-425F-B22A-B2A7AB8840C8}"
 	ProjectSection(SolutionItems) = preProject
 		common\graph.h = common\graph.h
+		common\leetcode.h = common\leetcode.h
+		common\ListNode.h = common\ListNode.h
 		common\TreeNode.h = common\TreeNode.h
 	EndProjectSection
 EndProject

@@ -50,5 +50,5 @@ int main()
     vector<double> o = {
         3, 14.5, 11,
     };
-    assert(averageOfLevels(construct(i)) == o);
+    assert(averageOfLevels(TreeNode::construct(i)) == o);
 }

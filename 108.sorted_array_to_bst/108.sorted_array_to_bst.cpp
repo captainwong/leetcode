@@ -26,7 +26,7 @@ int main()
         vector<int> i = { 3,5,8 };
         vector<string> o = { "5", "3", "8" };
         auto root = sortedArrayToBST(i);
-        auto s = TreeNode::treeToString(root);
+        auto s = TreeNode::toStringVector(root);
         assert(s == o);
     }
     
@@ -34,7 +34,7 @@ int main()
         vector<int> i = { -10,-3,0,5,9 };
         vector<string> o = { "0","-3","9","-10","null","5" };
         auto root = sortedArrayToBST(i);
-        auto s = TreeNode::treeToString(root);
+        auto s = TreeNode::toStringVector(root);
         assert(s == o);
     }
 
@@ -42,7 +42,7 @@ int main()
         vector<int> i = { 0,1,2,3,4,5 };
         vector<string> o = { "3","1","5","0","2","4" };
         auto root = sortedArrayToBST(i);
-        auto s = TreeNode::treeToString(root);
+        auto s = TreeNode::toStringVector(root);
         assert(s == o);
     }
 }

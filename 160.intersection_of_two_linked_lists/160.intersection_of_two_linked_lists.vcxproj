@@ -142,6 +142,9 @@
   <ItemGroup>
     <ClCompile Include="160.intersection_of_two_linked_lists.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\common\ListNode.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,16 +1,11 @@
 #pragma once
 
-#include <queue>
-#include <stack>
-#include <assert.h>
-#include <list>
-#include <string>
+#include "leetcode.h"
 
-using namespace std;
 
 // in: "[4,null,-1]"
 // out: ["4", "null", "-1"]
-static vector<string> convertLeetcodeInputToStringV(const std::string& input) {
+static vector<string> convertLeetcodeInputToStringVector(const std::string& input) {
     vector<string> v;
     string word;
     word.push_back(input[1]);
@@ -31,7 +26,7 @@ struct TreeNode {
     int val;
     TreeNode* left;
     TreeNode* right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
     static TreeNode* construct(const vector<int>& v) {
         auto root = new TreeNode(v[0]);
@@ -73,7 +68,7 @@ struct TreeNode {
     }
 
     //! 层次遍历，若节点为null，以"null"表示
-    static vector<string> treeToString(TreeNode* root) {
+    static vector<string> toStringVector(TreeNode* root) {
         vector<string> v;
         if (!root) { return v; }
         queue<TreeNode*> q;
@@ -92,7 +87,7 @@ struct TreeNode {
     }
 
     //! 层次遍历，若节点为null，以-1表示
-    static vector<int> treeToInt(TreeNode* root) {
+    static vector<int> toIntVector(TreeNode* root) {
         vector<int> v;
         if (!root) { return v; }
         queue<TreeNode*> q;
@@ -111,11 +106,11 @@ struct TreeNode {
     }
 
     static bool equals(TreeNode* root, const vector<string>& vs) {
-        return treeToString(root) == vs;
+        return toStringVector(root) == vs;
     }
 
     static bool equals(TreeNode* root, const vector<int>& vi) {
-        return treeToInt(root) == vi;
+        return toIntVector(root) == vi;
     }
 
     static bool equals(const vector<int>& vi, const vector<string>& vs) {

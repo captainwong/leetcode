@@ -35,5 +35,5 @@ int maxDepth(TreeNode* root) {
 
 int main()
 {
-    assert(maxDepth(construct({ 3,9,20,-1,-1,15,7 })) == 3);
+    assert(maxDepth(TreeNode::construct({ 3,9,20,-1,-1,15,7 })) == 3);
 }

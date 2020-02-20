@@ -2,11 +2,8 @@
 //
 
 #include "pch.h"
-#include <iostream>
-#include <cassert>
-#include "../leetcode.h"
+#include "../common/ListNode.h"
 
-using namespace leetcode;
 
 // https://leetcode-cn.com/problems/add-two-numbers/
 /*
@@ -147,15 +144,15 @@ public:
 	}
 
 	bool test(std::initializer_list<int> l1, std::initializer_list<int> l2, std::initializer_list<int> l3) {
-		auto nl1 = makeList(l1);
-		auto nl2 = makeList(l2);
-		auto nl3 = makeList(l3);
+		auto nl1 = ListNode::construct(l1);
+		auto nl2 = ListNode::construct(l2);
+		auto nl3 = ListNode::construct(l3);
 		auto nl12 = addTwoNumbersMaximized(nl1, nl2);
-		printList("nl1", nl1);
-		printList("nl2", nl2);
-		printList("nl3", nl3);
-		printList("nl12", nl12);
-		return isEqual(nl12, nl3);
+		ListNode::printList("nl1", nl1);
+		ListNode::printList("nl2", nl2);
+		ListNode::printList("nl3", nl3);
+		ListNode::printList("nl12", nl12);
+		return ListNode::equals(nl12, nl3);
 	}
 };
 

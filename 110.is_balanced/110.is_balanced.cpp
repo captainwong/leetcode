@@ -30,9 +30,9 @@ bool isBalanced(TreeNode* root) {
 
 int main()
 {
-    //assert(isBalanced(construct({ 1,-1,2,-1,3 })) == false);
-    //assert(isBalanced(construct({ 3,9,20,-1,-1,15,7 })) == true);
-    assert(isBalanced(construct({ 1,2,2,3,-1,-1,3,4,-1,-1,4 })) == true); 
+    //assert(isBalanced(TreeNode::construct({ 1,-1,2,-1,3 })) == false);
+    //assert(isBalanced(TreeNode::construct({ 3,9,20,-1,-1,15,7 })) == true);
+    assert(isBalanced(TreeNode::construct({ 1,2,2,3,-1,-1,3,4,-1,-1,4 })) == true);
     vector<int> a;
-    a.
+    //a.
 }

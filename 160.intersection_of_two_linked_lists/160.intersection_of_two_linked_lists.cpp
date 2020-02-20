@@ -1,25 +1,8 @@
-#include <assert.h>
-#include <string>
-#include <vector>
+#include "../common/ListNode.h"
 
 using namespace std;
 
-struct ListNode {
-    int val;
-    ListNode* next;
-    ListNode(int x) : val(x), next(NULL) {}
-    
-    static ListNode* construct(const vector<int>& v) {
-        if (v.empty()) { return NULL; }
-        auto head = new ListNode(v[0]);
-        auto p = head;
-        for (size_t i = 1; i < v.size(); i++) {
-            p->next = new ListNode(v[i]);
-            p = p->next;
-        }
-        return head;
-    }
-};
+
 
 ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
     if (!headA || !headB) { return NULL; }

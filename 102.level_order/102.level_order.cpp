@@ -43,5 +43,5 @@ int main()
         {9,20},
         {15,7},
     };
-    assert(levelOrder(construct(i)) == o);
+    assert(levelOrder(TreeNode::construct(i)) == o);
 }

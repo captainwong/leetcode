@@ -87,9 +87,9 @@ bool isSymmetric2(TreeNode* root) {
 
 int main()
 {
-	assert(isSymmetric2(construct(vector<int>{ 5, 4, 1, -1, 1, -1, 4, 2, -1, 2, -1 })) == false);
-	assert(isSymmetric2(construct(vector<int>{ 1, 2, 2, 2, -1, 2 })) == false);
-	assert(isSymmetric2(construct(vector<int>{ 1, 2, 2, 3, 4, 4, 3 })) == true);
-	assert(isSymmetric2(construct(vector<int>{ 1, 2, 2, -1, 3, 3 })) == true);
-	assert(isSymmetric2(construct(vector<int>{ 3, 4, 4, 5, -1, -1, 5, 6, -1, -1, 6 })) == true);
+	assert(isSymmetric2(TreeNode::construct(vector<int>{ 5, 4, 1, -1, 1, -1, 4, 2, -1, 2, -1 })) == false);
+	assert(isSymmetric2(TreeNode::construct(vector<int>{ 1, 2, 2, 2, -1, 2 })) == false);
+	assert(isSymmetric2(TreeNode::construct(vector<int>{ 1, 2, 2, 3, 4, 4, 3 })) == true);
+	assert(isSymmetric2(TreeNode::construct(vector<int>{ 1, 2, 2, -1, 3, 3 })) == true);
+	assert(isSymmetric2(TreeNode::construct(vector<int>{ 3, 4, 4, 5, -1, -1, 5, 6, -1, -1, 6 })) == true);
 }
