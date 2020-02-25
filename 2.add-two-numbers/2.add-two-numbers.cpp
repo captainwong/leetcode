@@ -62,114 +62,110 @@ Explanation: 342 + 465 = 807.
 //};
 
 
-class Solution {
-public:
-	ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-		int carry = 0;
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+	int carry = 0;
 
-		auto all_valid = [](ListNode*& l1, ListNode*& l2, int& carry) {
-			auto p = new ListNode(0);
-			int sum = l1->val + l2->val + carry;
-			if (sum > 9) {
-				p->val = sum - 10;
-				carry = 1;
-			} else {
-				p->val = sum;
-				carry = 0;
-			}
-			l1 = l1->next;
-			l2 = l2->next;
-			return p;
-		};
+	auto all_valid = [](ListNode*& l1, ListNode*& l2, int& carry) {
+		auto p = new ListNode(0);
+		int sum = l1->val + l2->val + carry;
+		if (sum > 9) {
+			p->val = sum - 10;
+			carry = 1;
+		} else {
+			p->val = sum;
+			carry = 0;
+		}
+		l1 = l1->next;
+		l2 = l2->next;
+		return p;
+	};
 
-		auto one_valid = [](ListNode*& l, int& carry) {
-			auto p = new ListNode(0);
-			int sum = l->val + carry;
-			if (sum > 9) {
-				p->val = sum - 10;
-				carry = 1;
-			} else {
-				p->val = sum;
-				carry = 0;
-			}
-			l = l->next;
-			return p;
-		};
+	auto one_valid = [](ListNode*& l, int& carry) {
+		auto p = new ListNode(0);
+		int sum = l->val + carry;
+		if (sum > 9) {
+			p->val = sum - 10;
+			carry = 1;
+		} else {
+			p->val = sum;
+			carry = 0;
+		}
+		l = l->next;
+		return p;
+	};
 
-		auto ret = all_valid(l1, l2, carry);
-		auto p = ret;
+	auto ret = all_valid(l1, l2, carry);
+	auto p = ret;
 		
-		while (l1 || l2) {
-			if (l1 && l2) {
-				p->next = all_valid(l1, l2, carry);
-				p = p->next;
-			} else if (l1) {
-				p->next = one_valid(l1, carry);
-				p = p->next;
-			} else if (l2) {
-				p->next = one_valid(l2, carry);
-				p = p->next;
-			}
+	while (l1 || l2) {
+		if (l1 && l2) {
+			p->next = all_valid(l1, l2, carry);
+			p = p->next;
+		} else if (l1) {
+			p->next = one_valid(l1, carry);
+			p = p->next;
+		} else if (l2) {
+			p->next = one_valid(l2, carry);
+			p = p->next;
 		}
-
-		if (carry) {
-			p->next = new ListNode(1);
-		}
-
-		return ret;
 	}
 
-	ListNode* addTwoNumbersMaximized(ListNode* l1, ListNode* l2) {
-		int carry = 0;
-		auto dummy = new ListNode(0);
-		auto p = dummy;
-
-		while (l1 || l2) {
-			int x = l1 ? l1->val : 0;
-			int y = l2 ? l2->val : 0;
-			int sum = x + y + carry;
-			carry = sum / 10;
-			auto q = new ListNode(sum % 10);
-			p->next = q;
-			p = q;
-			if (l1) { l1 = l1->next; }
-			if (l2) { l2 = l2->next; }
-		}
-
-		if (carry) {
-			p->next = new ListNode(1);
-		}
-
-		return dummy->next;
+	if (carry) {
+		p->next = new ListNode(1);
 	}
 
-	bool test(std::initializer_list<int> l1, std::initializer_list<int> l2, std::initializer_list<int> l3) {
-		auto nl1 = ListNode::construct(l1);
-		auto nl2 = ListNode::construct(l2);
-		auto nl3 = ListNode::construct(l3);
-		auto nl12 = addTwoNumbersMaximized(nl1, nl2);
-		ListNode::printList("nl1", nl1);
-		ListNode::printList("nl2", nl2);
-		ListNode::printList("nl3", nl3);
-		ListNode::printList("nl12", nl12);
-		return ListNode::equals(nl12, nl3);
+	return ret;
+}
+
+ListNode* addTwoNumbersMaximized(ListNode* l1, ListNode* l2) {
+	int carry = 0;
+	auto dummy = new ListNode(0);
+	auto p = dummy;
+
+	while (l1 || l2) {
+		int x = l1 ? l1->val : 0;
+		int y = l2 ? l2->val : 0;
+		int sum = x + y + carry;
+		carry = sum / 10;
+		auto q = new ListNode(sum % 10);
+		p->next = q;
+		p = q;
+		if (l1) { l1 = l1->next; }
+		if (l2) { l2 = l2->next; }
 	}
-};
+
+	if (carry) {
+		p->next = new ListNode(1);
+	}
+
+	return dummy->next;
+}
+
+bool test(std::initializer_list<int> l1, std::initializer_list<int> l2, std::initializer_list<int> l3) {
+	auto nl1 = ListNode::construct(l1);
+	auto nl2 = ListNode::construct(l2);
+	auto nl3 = ListNode::construct(l3);
+	auto nl12 = addTwoNumbersMaximized(nl1, nl2);
+	ListNode::print("nl1", nl1);
+	ListNode::print("nl2", nl2);
+	ListNode::print("nl3", nl3);
+	ListNode::print("nl12", nl12);
+	return ListNode::equals(nl12, nl3);
+}
 
 int main()
 {
-	Solution s;
-	assert(s.test({ 9 }, 
-				  { 1,9,9,9,9,9,9,9,9,9 },
-				  { 0,0,0,0,0,0,0,0,0,0,1 }));
+	assert(test({ 9 },
+				{ 1,9,9,9,9,9,9,9,9,9 },
+				{ 0,0,0,0,0,0,0,0,0,0,1 }));
 
-	assert(s.test({ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 },
-				  { 5, 6, 4 }, 
-				  { 6,6,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 }));
+	assert(test({ 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 },
+				{ 5, 6, 4 },
+				{ 6,6,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1 }));
 
-	assert(s.test({ 2,4,3 }, 
-				  { 5,6,4 }, 
-				  { 7,0,8 }));
+	assert(test({ 2,4,3 },
+				{ 5,6,4 },
+				{ 7,0,8 }));
 	
 	system("pause");
 }

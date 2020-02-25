@@ -42,10 +42,14 @@ struct ListNode {
         return true;
     }
 
-    static void printList(const char* tag, ListNode* l) {
+    static void print(const char* tag, ListNode* l) {
         printf("%s:[", tag);
+        if (l) {
+            printf("%d", l->val);
+            l = l->next;
+        }
         while (l) {
-            printf("%d, ", l->val);
+            printf(", %d", l->val);
             l = l->next;
         }
         printf("]\n");

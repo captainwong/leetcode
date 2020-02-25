@@ -28,6 +28,38 @@ struct TreeNode {
     TreeNode* right;
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
 
+    static TreeNode* find(TreeNode* root, int val) {
+        if (!root) { return NULL; }
+        stack<TreeNode*> s;
+        s.push(root);
+        while (!s.empty()) {
+            auto p = s.top(); s.pop();
+            if (p->val == val) { return p; }
+            if (p->left) { if (p->left->val == val) { return p->left; } s.push(p->left); }
+            if (p->right) { if (p->right->val == val) { return p->right; } s.push(p->right); }
+        }
+        return NULL;
+    }
+
+    static TreeNode* construct(std::initializer_list<int> n) {
+        if (n.size() == 0) { return nullptr; }
+        auto i = n.begin();
+        auto root = new TreeNode(*i);
+        vector<TreeNode*> level;
+        level.push_back(root); 
+        vector<TreeNode*> tmp;
+        for (auto& p : level) {
+            if (p && p->val != -1) {
+                TreeNode* left = p->left = (i >= n.end() || *i == -1) ? nullptr : new TreeNode(*i); i++;
+                TreeNode* right = p->right = (i >= n.end() || *i == -1) ? nullptr : new TreeNode(*i); i++;
+                tmp.push_back(left);
+                tmp.push_back(right);
+            }
+        }
+        level = tmp;
+        return root;
+    }
+
     static TreeNode* construct(const vector<int>& v) {
         auto root = new TreeNode(v[0]);
         vector<TreeNode*> level;
