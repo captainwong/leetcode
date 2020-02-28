@@ -2,26 +2,6 @@
 
 #include "leetcode.h"
 
-
-// in: "[4,null,-1]"
-// out: ["4", "null", "-1"]
-static vector<string> convertLeetcodeInputToStringVector(const std::string& input) {
-    vector<string> v;
-    string word;
-    word.push_back(input[1]);
-    for (size_t i = 2; i < input.size(); i++) {
-        char c = input[i];
-        if (c == ',' || c == ']') {
-            v.push_back(word);
-            word.clear();
-        } else {
-            word.push_back(c);
-        }
-    }
-    return v;
-}
-
-
 struct TreeNode {
     int val;
     TreeNode* left;
