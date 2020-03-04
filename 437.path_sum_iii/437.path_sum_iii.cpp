@@ -1,39 +1,26 @@
 #include "../common/TreeNode.h"
 
 int n = 0;
+vector<int> sums = {};
 
-void pathSum(TreeNode* node, list<int> v, int sum, int Sum) {
+int getDepth(TreeNode* node) {
+    if (!node) { return 0; }
+    return max(getDepth(node->left), getDepth(node->right)) + 1;
+}
+
+void trav(TreeNode* node, int level, int sum) {
     if (!node) { return; }
-
-    while (sum + node->val > Sum && !v.empty() && v.front() > 0) {
-        sum -= v.front();
-        v.pop_front();
+    sums[level] = sums[level - 1] + node->val;
+    for (int i = 0; i < level; i++) {
+        if (sums[level] - sums[i] == sum) { n++; }
     }
-
-    while (sum + node->val < Sum && !v.empty() && v.front() < 0) {
-        sum -= v.front();
-        v.pop_front();
-    }
-
-    sum += node->val;
-    if (sum == Sum) {
-        n++;
-    }
-
-    v.push_back(node->val);
-    pathSum(node->left, v, sum, Sum);
-    pathSum(node->right, v, sum, Sum);
-
+    trav(node->left, level + 1, sum);
+    trav(node->right, level + 1, sum);
 }
 
 int pathSum(TreeNode* root, int sum) {
-    if (!root) {
-        return 0;
-    }
-    list<int> v;
-    v.push_back(root->val);
-    pathSum(root->left, v, root->val, sum);
-    pathSum(root->right, v, root->val, sum);
+    sums.resize(getDepth(root) + 1); sums[0] = 0;
+    trav(root, 1, sum);
     return n;
 }
 

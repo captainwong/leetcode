@@ -1,5 +1,6 @@
 #include <string>
 #include <assert.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -58,7 +59,9 @@ bool repeatedSubstringPattern(string s) {
 int main() {
     assert(my::repeatedSubstringPattern("abab") == true);
     assert(my::repeatedSubstringPattern("aabaaba") == false);
-
+    
     assert(da_li_wang::repeatedSubstringPattern("abab") == true);
     assert(da_li_wang::repeatedSubstringPattern("aabaaba") == false);
+
+    string s;
 }

@@ -24,19 +24,21 @@ struct TreeNode {
     static TreeNode* construct(std::initializer_list<int> n) {
         if (n.size() == 0) { return nullptr; }
         auto i = n.begin();
-        auto root = new TreeNode(*i);
+        auto root = new TreeNode(*i++);
         vector<TreeNode*> level;
         level.push_back(root); 
-        vector<TreeNode*> tmp;
-        for (auto& p : level) {
-            if (p && p->val != -1) {
-                TreeNode* left = p->left = (i >= n.end() || *i == -1) ? nullptr : new TreeNode(*i); i++;
-                TreeNode* right = p->right = (i >= n.end() || *i == -1) ? nullptr : new TreeNode(*i); i++;
-                tmp.push_back(left);
-                tmp.push_back(right);
+        while (i < n.end()) {
+            vector<TreeNode*> tmp;
+            for (auto& p : level) {
+                if (p && p->val != -1) {
+                    TreeNode* left = p->left = (i >= n.end() || *i == -1) ? nullptr : new TreeNode(*i); i++;
+                    TreeNode* right = p->right = (i >= n.end() || *i == -1) ? nullptr : new TreeNode(*i); i++;
+                    tmp.push_back(left);
+                    tmp.push_back(right);
+                }
             }
+            level = tmp;
         }
-        level = tmp;
         return root;
     }
 
@@ -108,8 +110,8 @@ struct TreeNode {
             auto p = q.front(); q.pop();
             v.push_back(p ? (p->val) : -1);
             if (!p) { continue; }
-            if (p->left) { q.push(p->left); }
-            if (p->right) { q.push(p->right); }
+            q.push(p->left);
+            q.push(p->right);
         }
         while (!v.empty() && v.back() == -1) {
             v.pop_back();
