@@ -1,4 +1,5 @@
 #include "../common/leetcode.h"
+#include <string.h>
 
 class Solution {
 public:
