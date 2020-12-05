@@ -1,10 +1,10 @@
-#include "../common/leetcode.h"
+ï»¿#include "../common/leetcode.h"
 #include <string.h>
 
 
 /*
-Ö´ĞĞÓÃÊ±£º176 ms, ÔÚËùÓĞ C++ Ìá½»ÖĞ»÷°ÜÁË5.62%µÄÓÃ»§
-ÄÚ´æÏûºÄ£º16.9 MB, ÔÚËùÓĞ C++ Ìá½»ÖĞ»÷°ÜÁË5.62%µÄÓÃ»§
+æ‰§è¡Œç”¨æ—¶ï¼š176 ms, åœ¨æ‰€æœ‰ C++ æäº¤ä¸­å‡»è´¥äº†5.62%çš„ç”¨æˆ·
+å†…å­˜æ¶ˆè€—ï¼š16.9 MB, åœ¨æ‰€æœ‰ C++ æäº¤ä¸­å‡»è´¥äº†5.62%çš„ç”¨æˆ·
 */
 class Solution {
 public:
@@ -148,11 +148,11 @@ public:
             auto& item = find_next_space(last.i, last.j);            
             item.val = find_available_val(item.i, item.j, item.start + 1);
             if (item.val == 0) {
-                //bool should_remove_prev = last.val == 9; // µ±Ç°Õâ¸ö±»ÒÆ³ıµÄÊı×ÖÒÑ¾­³¢ÊÔµ½9ÁË£¬ËµÃ÷Ç°Ò»¸öÒ²ÊÇ´íµÄ
+                //bool should_remove_prev = last.val == 9; // å½“å‰è¿™ä¸ªè¢«ç§»é™¤çš„æ•°å­—å·²ç»å°è¯•åˆ°9äº†ï¼Œè¯´æ˜å‰ä¸€ä¸ªä¹Ÿæ˜¯é”™çš„
                 do{
                     remove(last);
-                    if (tried.size() == 1) { // »ØËİµ½µÚÒ»¸ö¿ÕÎ»ÁË
-                        last.val = find_available_val(last.i, last.j, ++last.start); // ÕâÀï²»ÓÃ¿¼ÂÇÊ§°ÜÒòÎªÌâÄ¿±£Ö¤ÓĞ½â
+                    if (tried.size() == 1) { // å›æº¯åˆ°ç¬¬ä¸€ä¸ªç©ºä½äº†
+                        last.val = find_available_val(last.i, last.j, ++last.start); // è¿™é‡Œä¸ç”¨è€ƒè™‘å¤±è´¥å› ä¸ºé¢˜ç›®ä¿è¯æœ‰è§£
                         place(last);
                     } else {
                         tried.pop_back();
