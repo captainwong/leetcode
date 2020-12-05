@@ -151,7 +151,7 @@ public:
                         place(last);
                     } else {
                         tried.pop_back();
-                        last = tried.back();
+                        //last = tried.back();
                         /*if (should_remove_prev) {
                             should_remove_prev = last.val == 9;
                             remove(last);
