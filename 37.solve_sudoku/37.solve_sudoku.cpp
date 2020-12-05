@@ -1,6 +1,11 @@
 #include "../common/leetcode.h"
 #include <string.h>
 
+
+/*
+执行用时：176 ms, 在所有 C++ 提交中击败了5.62%的用户
+内存消耗：16.9 MB, 在所有 C++ 提交中击败了5.62%的用户
+*/
 class Solution {
 public:
 
@@ -168,7 +173,7 @@ public:
             //print();
         }
 
-        print();
+        //print();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 board[i][j] = items[i * 9 + j].val + '0';
