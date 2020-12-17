@@ -9,11 +9,12 @@
 #include <algorithm>
 #include <stdint.h>
 
-#ifdef _WIN32
-#define ENABLE_NORVIG_CPP 1
-#else 
-#define ENABLE_NORVIG_CPP 0 
-#endif
+//
+//#ifdef _WIN32
+//#define ENABLE_NORVIG_CPP 1
+//#else 
+//#define ENABLE_NORVIG_CPP 0 
+//#endif
 
 #if ENABLE_NORVIG_CPP
 #include <optional>
