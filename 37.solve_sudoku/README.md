@@ -46,10 +46,11 @@ DETAILED: [norvig_no_optional_I7-8700.txt](./norvig_no_optional_I7-8700.txt)
 OVERALL: 
 
 ```
-solved 50 of 50 easy50 puzzles, total 634ms, avg 12.68ms, max 189ms
-solved 90 of 95 top95 puzzles, total 550935ms, avg 5799.32ms, max 131285ms
-solved 11 of 11 hardest puzzles, total 719ms, avg 65.36ms, max 201ms
+solved 50 of 50 easy50 puzzles, total 90ms, avg 1.80ms, max 2ms
+solved 95 of 95 top95 puzzles, total 600ms, avg 6.32ms, max 24ms
+solved 11 of 11 hardest puzzles, total 42ms, avg 3.82ms, max 15ms
 ```
 
-DETAILED: [norvig_I5-4590.txt](./norvig_I5-4590.txt)
+DETAILED: [norvig_no_optional_I5-4590.txt](./norvig_no_optional_I5-4590.txt)
 
+很奈斯啊！
