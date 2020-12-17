@@ -6,6 +6,7 @@
 #include <chrono>
 #include <unordered_map>
 #include <unordered_set>
+#include <algorithm>
 #include <stdint.h>
 
 #define ENABLE_NORVIG_CPP 0
