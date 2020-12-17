@@ -6,8 +6,13 @@
 #include <chrono>
 #include <unordered_map>
 #include <unordered_set>
-#include <optional>
 #include <stdint.h>
+
+#define ENABLE_NORVIG_CPP 0
+
+#if ENABLE_NORVIG_CPP
+#include <optional>
+#endif
 
 /*
 执行用时：176 ms, 在所有 C++ 提交中击败了5.62%的用户
@@ -478,7 +483,7 @@ void test() {
 
 }
 
-#if _HAS_CXX17
+#if (ENABLE_NORVIG_CPP && _HAS_CXX17)
 // 移植norvig的python为c++版
 namespace norvig_cpp {
 
