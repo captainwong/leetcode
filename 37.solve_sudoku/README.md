@@ -28,7 +28,27 @@ DETAILED: [norvig_I5-4590.txt](./norvig_I5-4590.txt)
 
 不得不说表现太差劲了，时间太长不说，还有解不出来的。。。
 
+## norvig_cpp test result
+
+直接翻译python代码，使用了std::optional, 需要 c++17
+
+### CPU: I7-8700
+
+OVERALL:
+
+```
+solved 50 of 50 easy50 puzzles, total 3609ms, avg 72.18ms, max 100ms
+solved 95 of 95 top95 puzzles, total 26709ms, avg 281.15ms, max 1413ms
+solved 11 of 11 hardest puzzles, total 1120ms, avg 101.82ms, max 152ms
+```
+
+DETAILED: [norvig_with_optional_I7-8700.txt](./norvig_with_optional_I7-8700.txt)
+
+可以全解了，但是慢悠悠
+
 ## norvig_cpp_without_std_optional test result
+
+在 `norvig_cpp` 的基础上移除了 `std::optional`，表现大为改善
 
 ### CPU: I7-8700
 

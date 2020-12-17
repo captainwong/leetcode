@@ -9,7 +9,11 @@
 #include <algorithm>
 #include <stdint.h>
 
-#define ENABLE_NORVIG_CPP 0
+#ifdef _WIN32
+#define ENABLE_NORVIG_CPP 1
+#else 
+#define ENABLE_NORVIG_CPP 0 
+#endif
 
 #if ENABLE_NORVIG_CPP
 #include <optional>
@@ -485,7 +489,7 @@ void test() {
 }
 
 #if (ENABLE_NORVIG_CPP && _HAS_CXX17)
-// 移植norvig的python为c++版
+// 移植norvig的python为c++版，使用std::optional，测试hard1太慢了
 namespace norvig_cpp {
 
 /*
@@ -882,6 +886,22 @@ public:
         printf("\n");
     }
 
+    void display(const std::unordered_map<std::string, char>& values) {
+        size_t width = 2;
+        std::string line = join(std::vector<std::string>(3, std::string(width * 3, '-')), std::string("+"));
+        for (auto r : rows) {
+            for (auto c : cols) {
+                std::string s; s.push_back(r); s.push_back(c);
+                printf("%s%s", center(std::string(1, values.find(s)->second), width).c_str(),
+                       std::string(contains(std::string("36"), c) ? "|" : "").c_str());
+            }
+            printf("\n");
+            if (contains(std::string("CF"), r)) {
+                printf("%s\n", line.c_str());
+            }
+        }
+        printf("\n");
+    }
 
     // ################ Search ################
 
@@ -964,36 +984,37 @@ vector<std::string> from_file(std::string path) {
     return res;
 }
 
-//
-//// show_if == 0 dont show board
-//// show_if = ms, show board if sovle time exceeds ms
-//void solve_all(vector<std::string> grids, std::string name = "", int show_if = 0) {
-//    int total = 0, ok = 0;
-//    long long ms = 0, max_ms = 0;
-//    for (auto& grid : grids) {
-//        auto start = std::chrono::steady_clock::now();
-//        bool pass = sln.readBoard(board);
-//        if (show_if != 0) {
-//            sln.print(true);
-//        }
-//        if (pass) {
-//            pass = sln.solve();
-//        }
-//        auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
-//        if (show_if != 0 && diff > show_if) {
-//            sln.print(true);
-//            printf("#%d of puzzle %s, cost %lldms\n", total, name.c_str(), diff);
-//        }
-//        ms += diff;
-//        if (diff > max_ms) { max_ms = diff; }
-//        total++;
-//        if (pass) { ok++; }
-//    }
-//
-//    if (total > 0) {
-//        printf("solved %d of %d %s puzzles, total %lldms, avg %.2fms, max %lldms\n", ok, total, name.c_str(), ms, ms * 1.0 / total, max_ms);
-//    }
-//}
+
+// show_if == -1 dont show board
+// show_if = ms >= 0, show board if sovle time exceeds ms
+void solve_all(vector<std::string> grids, std::string name = "", int show_if = 0) {
+    Sudoku sudoku;
+    int total = 0, ok = 0;
+    long long ms = 0, max_ms = 0;
+    std::unordered_map<std::string, std::unordered_set<char>> values;
+    for (const auto& grid : grids) {
+        auto start = std::chrono::steady_clock::now();
+        auto values = sudoku.solve(grid);
+        auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+        if (show_if != -1 && diff > show_if) {
+            sudoku.display(sudoku.grid_values(grid));
+            if (values) {
+                sudoku.display(*values);
+            } else {
+                printf("No solution\n");
+            }
+            printf("#%d of puzzle %s, cost %lldms\n", total + 1, name.c_str(), diff);
+        }
+        ms += diff;
+        if (diff > max_ms) { max_ms = diff; }
+        total++;
+        if (values) { ok++; }
+    }
+
+    if (total > 0) {
+        printf("solved %d of %d %s puzzles, total %lldms, avg %.2fms, max %lldms\n", ok, total, name.c_str(), ms, ms * 1.0 / total, max_ms);
+    }
+}
 
 //void test() {
 //    solve_all("./easy50.txt", "easy50", 1);
@@ -1001,27 +1022,34 @@ vector<std::string> from_file(std::string path) {
 //    solve_all("./hardest.txt", "hardest", 1);
 //}
 
-void test() {
+void test(int show_if = 0) {
     Sudoku sudoku;
-    sudoku.print();
+    //sudoku.print();
     sudoku.test();
 
-    std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
-    std::string grid2 = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......";
-    std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6..................";
+    //std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
+    //std::string grid2 = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......";
+    //std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6.................."; // i7-8700 took 40s to solve
 
-    auto v = sudoku.solve(grid1);
-    if (v) {
-        sudoku.display(*v);
-    }
-    v = sudoku.solve(grid2);
-    if (v) {
-        sudoku.display(*v);
-    }
-    v = sudoku.solve(hard1); // can't solve
-    if (v) {
-        sudoku.display(*v);
-    }
+    // /*std::unordered_map<std::string, std::unordered_set<char>> values;
+    //if (sudoku.solve(grid1, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(grid2, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(hard1, values)) {
+    //    sudoku.display(values);
+    //}*/
+    ////solve_all(std::vector<std::string>{grid1, grid2, /*hard1*/ }, "test");
+    //
+    //
+
+
+
+    solve_all(from_file("./easy50.txt"), "easy50", show_if);
+    solve_all(from_file("./top95.txt"), "top95", show_if);
+    solve_all(from_file("./hardest.txt"), "hardest", show_if);
 }
 
 }
@@ -1596,6 +1624,11 @@ int main(int argc, char** argv)
     if (argc > 1) {
         show_if = atoi(argv[1]);
     }
-    norvig_cpp_without_std_optional::test(show_if);
+
+#if (ENABLE_NORVIG_CPP && _HAS_CXX17)
+    norvig_cpp::test(show_if);
+#endif
+
+    //norvig_cpp_without_std_optional::test(show_if);
 }
 
