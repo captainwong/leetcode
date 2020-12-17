@@ -1,0 +1,4 @@
+All tests pass.
+solved 50 of 50 easy50 puzzles, total 105ms, avg 2.10ms, max 3ms
+solved 95 of 95 top95 puzzles, total 763ms, avg 8.03ms, max 40ms
+solved 11 of 11 hardest puzzles, total 24ms, avg 2.18ms, max 4ms
