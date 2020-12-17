@@ -478,6 +478,7 @@ void test() {
 
 }
 
+#if _HAS_CXX17
 // 移植norvig的python为c++版
 namespace norvig_cpp {
 
@@ -1018,12 +1019,14 @@ void test() {
 }
 
 }
+#endif
+
 
 int main()
 {
     //leetcode::test();
     //norvig::test();
-    norvig_cpp::test();
+    //norvig_cpp::test();
 
 }
 
