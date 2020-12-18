@@ -1577,15 +1577,9 @@ void solve_all(vector<std::string> grids, std::string name = "", int show_if = 0
     }
 }
 
-//void test() {
-//    solve_all("./easy50.txt", "easy50", 1);
-//    solve_all("./top95.txt", "top95", 1);
-//    solve_all("./hardest.txt", "hardest", 1);
-//}
-
 void test(int show_if = 0) {
     Sudoku sudoku;
-    //sudoku.print();
+    sudoku.print();
     sudoku.test();
 
     //std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
@@ -1615,6 +1609,631 @@ void test(int show_if = 0) {
 
 }
 
+// https://github.com/pauek/norvig-sudoku/blob/master/sudoku.en.cc
+//namespace norgiv_cc {
+//using namespace std;
+//
+//class Possible {
+//    vector<bool> _b;
+//public:
+//    Possible() : _b(9, true) {}
+//    bool   is_on(int i) const { return _b[i - 1]; }
+//    int    count()      const { return std::count(_b.begin(), _b.end(), true); }
+//    void   eliminate(int i) { _b[i - 1] = false; }
+//    int    val()        const {
+//        auto it = find(_b.begin(), _b.end(), true);
+//        return (it != _b.end() ? 1 + (it - _b.begin()) : -1);
+//    }
+//    string str(int wth) const;
+//};
+//
+//string Possible::str(int width) const {
+//    string s(width, ' ');
+//    int k = 0;
+//    for (int i = 1; i <= 9; i++) {
+//        if (is_on(i)) s[k++] = '0' + i;
+//    }
+//    return s;
+//}
+//
+//class Sudoku {
+//    vector<Possible> _cells;
+//    static vector< vector<int> > _group, _neighbors, _groups_of;
+//
+//    bool     eliminate(int k, int val);
+//public:
+//    Sudoku(string s);
+//    static void init();
+//
+//    Possible possible(int k) const { return _cells[k]; }
+//    bool     is_solved() const;
+//    bool     assign(int k, int val);
+//    int      least_count() const;
+//    void     write(ostream& o) const;
+//
+//    static void print(const char* name, const vector< vector<int> >& v) {
+//        printf("%s:\n[", name);
+//        for (size_t i = 0; i < v.size(); i++) {
+//            printf("#%d: [", i);
+//            for (size_t j = 0; j < v[i].size(); j++) {
+//                printf("%d, ", v[i][j]);
+//            }
+//            printf("], \n");
+//        }
+//        printf("]\n");
+//    }
+//
+//    static void print() {
+//        print("_group", _group);
+//        print("_neighbors", _neighbors);
+//        print("_groups_of", _groups_of);
+//    }
+//};
+//
+//bool Sudoku::is_solved() const {
+//    for (int k = 0; k < _cells.size(); k++) {
+//        if (_cells[k].count() != 1) {
+//            return false;
+//        }
+//    }
+//    return true;
+//}
+//
+//void Sudoku::write(ostream& o) const {
+//    int width = 1;
+//    for (int k = 0; k < _cells.size(); k++) {
+//        width = max(width, 1 + _cells[k].count());
+//    }
+//    const string sep(3 * width, '-');
+//    for (int i = 0; i < 9; i++) {
+//        if (i == 3 || i == 6) {
+//            o << sep << "+-" << sep << "+" << sep << endl;
+//        }
+//        for (int j = 0; j < 9; j++) {
+//            if (j == 3 || j == 6) o << "| ";
+//            o << _cells[i * 9 + j].str(width);
+//        }
+//        o << endl;
+//    }
+//}
+//
+//vector< vector<int> >
+//Sudoku::_group(27), Sudoku::_neighbors(81), Sudoku::_groups_of(81);
+//
+//void Sudoku::init() {
+//    for (int i = 0; i < 9; i++) {
+//        for (int j = 0; j < 9; j++) {
+//            const int k = i * 9 + j;
+//            const int x[3] = { i, 9 + j, 18 + (i / 3) * 3 + j / 3 };
+//            for (int g = 0; g < 3; g++) {
+//                _group[x[g]].push_back(k);
+//                _groups_of[k].push_back(x[g]);
+//            }
+//        }
+//    }
+//    for (int k = 0; k < _neighbors.size(); k++) {
+//        for (int x = 0; x < _groups_of[k].size(); x++) {
+//            for (int j = 0; j < 9; j++) {
+//                int k2 = _group[_groups_of[k][x]][j];
+//                if (k2 != k) _neighbors[k].push_back(k2);
+//            }
+//        }
+//    }
+//}
+//
+//bool Sudoku::assign(int k, int val) {
+//    for (int i = 1; i <= 9; i++) {
+//        if (i != val) {
+//            if (!eliminate(k, i)) return false;
+//        }
+//    }
+//    return true;
+//}
+//
+//bool Sudoku::eliminate(int k, int val) {
+//    if (!_cells[k].is_on(val)) {
+//        return true;
+//    }
+//    _cells[k].eliminate(val);
+//    const int N = _cells[k].count();
+//    if (N == 0) {
+//        return false;
+//    } else if (N == 1) {
+//        const int v = _cells[k].val();
+//        for (int i = 0; i < _neighbors[k].size(); i++) {
+//            if (!eliminate(_neighbors[k][i], v)) return false;
+//        }
+//    }
+//    for (int i = 0; i < _groups_of[k].size(); i++) {
+//        const int x = _groups_of[k][i];
+//        int n = 0, ks;
+//        for (int j = 0; j < 9; j++) {
+//            const int p = _group[x][j];
+//            if (_cells[p].is_on(val)) {
+//                n++, ks = p;
+//            }
+//        }
+//        if (n == 0) {
+//            return false;
+//        } else if (n == 1) {
+//            if (!assign(ks, val)) {
+//                return false;
+//            }
+//        }
+//    }
+//    return true;
+//}
+//
+//int Sudoku::least_count() const {
+//    int k = -1, min;
+//    for (int i = 0; i < _cells.size(); i++) {
+//        const int m = _cells[i].count();
+//        if (m > 1 && (k == -1 || m < min)) {
+//            min = m, k = i;
+//        }
+//    }
+//    return k;
+//}
+//
+//Sudoku::Sudoku(string s)
+//    : _cells(81)
+//{
+//    int k = 0;
+//    for (int i = 0; i < s.size(); i++) {
+//        if (s[i] >= '1' && s[i] <= '9') {
+//            if (!assign(k, s[i] - '0')) {
+//                cerr << "error" << endl;
+//                return;
+//            }
+//            k++;
+//        } else if (s[i] == '0' || s[i] == '.') {
+//            k++;
+//        }
+//    }
+//}
+//
+//unique_ptr<Sudoku> solve(unique_ptr<Sudoku> S) {
+//    if (S == nullptr || S->is_solved()) {
+//        return S;
+//    }
+//    int k = S->least_count();
+//    Possible p = S->possible(k);
+//    for (int i = 1; i <= 9; i++) {
+//        if (p.is_on(i)) {
+//            unique_ptr<Sudoku> S1(new Sudoku(*S));
+//            if (S1->assign(k, i)) {
+//                if (auto S2 = solve(std::move(S1))) {
+//                    return S2;
+//                }
+//            }
+//        }
+//    }
+//    return {};
+//}
+//
+//int main() {
+//    Sudoku::init();
+//    string line;
+//    while (getline(cin, line)) {
+//        if (auto S = solve(unique_ptr<Sudoku>(new Sudoku(line)))) {
+//            S->write(cout);
+//        } else {
+//            cout << "No solution";
+//        }
+//        cout << endl;
+//    }
+//}
+//}
+
+// 在 norvig_cpp_without_std_optional 的基础上继续优化
+// 重度参考了 https://github.com/pauek/norvig-sudoku/blob/master/sudoku.en.cc
+namespace norvig_cpp_optimize {
+
+
+
+class Sudoku {
+public:
+    struct Possible {
+        bool p[9];
+
+        Possible() { memset(p, true, sizeof(p)); }
+        Possible& operator=(const Possible& rhs) { memcpy(p, rhs.p, sizeof(p)); }
+
+        bool on(int i) const { return p[i - 1]; }
+        int count() const { return static_cast<int>(std::count(p, p + sizeof(p), true)); }
+        void eliminate(int i) { p[i - 1] = false; }
+        int val() const { for (int i = 0; i < sizeof(p); i++) { if (p[i]) { return i + 1; } } return 0; }
+
+        std::string to_string(int width, char c = ' ') const {
+            std::string s(width, c);
+            int k = 0;
+            for (int i = 1; i <= 9; i++) {
+                if (on(i)) { s[k++] = '0' + i; }
+            }
+            return s;
+        }
+    };
+
+    struct Helper {
+        std::vector<std::vector<int>> groups{}; // 9行+9列+9块=27个组，每组9个cell
+        std::vector<std::vector<int>> groups_of{}; // 81个位置，代表每个cell所属的组号
+        std::vector<std::unordered_set<int>> neighbors{}; // 81个位置，代表每个cell的邻居cell，每个cell有20个邻居
+
+        Helper() {
+            init_maximized(); 
+            test_inited();
+        }
+
+        void init() {
+            groups.clear(); groups.resize(27);
+            groups_of.clear(); groups_of.resize(81);
+            neighbors.clear(); neighbors.resize(81);
+
+
+            // (1) 初始化组: 每个cell都有3个组：同行，同列，同块
+
+            // 1~9行
+            for (int i = 0; i < 9; i++) {
+                // 每行9个cell
+                for (int j = 0; j < 9; j++) {
+                    int k = i * 9 + j;
+                    groups[i].push_back(k); // i 对应 0~8 组
+                    groups_of[k].push_back(i); // 记录 cell 所属的组号
+                }
+            }
+
+            // 1~9列
+            for (int i = 0; i < 9; i++) {
+                // 每列9个cell
+                for (int j = 0; j < 9; j++) {
+                    int k = i * 9 + j;
+                    groups[9 + j].push_back(k); // 9 + j 对应 9~17 组
+                    groups_of[k].push_back(9 + j); // 记录 cell 所属的组号
+                }
+            }
+
+            // 9个格子
+            for (int i = 0; i < 9; i++) {
+                // 每格9个cell
+                for (int j = 0; j < 9; j++) {
+                    int k = i * 9 + j;
+                    int block = i / 3 * 3 + j / 3;
+                    groups[18 + block].push_back(k); // 18 + block 对应 18~26 组
+                    groups_of[k].push_back(18 + block); // 记录 cell 所属的组号
+                }
+            }
+
+
+            // (2) 初始化邻居
+            for (int k = 0; k < 81; k++) { // k: cells 下标
+                for (auto g : groups_of[k]) { // g: 组号
+                    for (auto kk : groups[g]) { // kk: 组内 cell 下标
+                        if (kk != k) {
+                            neighbors[k].insert(kk);
+                        }
+                    }
+                }
+            }
+        }
+
+        void init_maximized() {
+            groups.clear(); groups.resize(27);
+            groups_of.clear(); groups_of.resize(81);
+            neighbors.clear(); neighbors.resize(81);
+
+            // (1) 初始化组: 每个cell都有3个组：同行，同列，同块
+            for (int i = 0; i < 9; i++) {
+                for (int j = 0; j < 9; j++) {
+                    int k = i * 9 + j;
+                    for (int g : {i, 9 + j, 18 + i / 3 * 3 + j / 3}) { // g: 组号
+                        groups[g].push_back(k);
+                        groups_of[k].push_back(g);
+                    }
+                }
+            }
+
+            // (2) 初始化邻居
+            for (int k = 0; k < 81; k++) { // k: cells 下标
+                for (auto g : groups_of[k]) { // g: 组号
+                    for (auto kk : groups[g]) { // kk: 组内 cell 下标
+                        if (kk != k) {
+                            neighbors[k].insert(kk);
+                        }
+                    }
+                }
+            }
+        }
+
+        template <typename T>
+        void print(const char* name, const T& t) {
+            printf("%s:[\n", name);
+            for (size_t i = 0; i < t.size(); i++) {
+                printf("#%02zd:[", i);
+                for (int j : t[i]) {
+                    printf("%d, ", j);
+                }
+                printf("],\n");
+            }
+            printf("]\n");
+        }
+
+        void test_inited() {
+            assert(groups.size() == 27);
+            for (const auto& group : groups) {
+                assert(group.size() == 9);
+            }
+
+            assert(groups_of.size() == 81);
+            for (const auto& go : groups_of) {
+                assert(go.size() == 3);
+            }
+
+            assert(neighbors.size() == 81);
+            for (const auto& neighbor : neighbors) {
+                assert(neighbor.size() == 20);
+            }
+        }
+
+        void print_members() {
+            print("groups", groups);
+            print("groups_of", groups_of);
+            print("neighbors", neighbors);
+        }
+    };
+
+protected:
+    std::vector<Possible> cells;
+    std::shared_ptr<Helper> helper{};
+
+public:
+    Sudoku() : cells(81)
+    {
+    }
+
+    std::string to_string() const {
+        int width = 1;
+        for (const auto& cell : cells) {
+            width = std::max(width, 1 + cell.count());
+        }
+        const std::string sep(3 * width, '-');
+        std::string res;
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                res += cells[i * 9 + j].to_string(width);
+                if (j == 2 || j == 5) {
+                    res += "|";
+                }
+            }
+            res += "\n";
+            if (i == 2 || i == 5) {
+                res += sep + "+" + sep + "+" + sep + "\n";
+            }
+        }
+        res += "\n";
+        return res;
+    }
+
+    static std::string to_string(std::string grid) {
+        const std::string sep(6, '-');
+        std::string res;
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                res.push_back(grid[i * 9 + j] != '0' ? grid[i * 9 + j] : '.');
+                res.push_back(' ');
+                if (j == 2 || j == 5) {
+                    res += "|";
+                }
+            } 
+            res += "\n";
+            if (i == 2 || i == 5) {
+                res += sep + "+" + sep + "+" + sep + "\n";
+            } 
+        }
+        res += "\n";
+        return res;
+    }
+
+
+    Possible possible(int k) const { return cells[k]; }
+
+    // 每个 cell 都仅剩一个备选时说明问题解决
+    bool is_solved() const { for (int i = 0; i < 81; i++) { if (cells[i].count() != 1) { return false; } } return true; }
+
+    // 找到备选元素最少的 cell
+    int least_count() const {
+        int k = -1, mini;
+        for (int i = 0; i < 81; i++) {
+            int m = cells[i].count();
+            if (m > 1 && (k == -1 || m < mini)) {
+                mini = m; k = i;
+            }
+        }
+        return k;
+    }
+
+    // 在 k 处的 cell 放置 val，排除 k 的所有非 val 的备选，仅剩 val 备选
+    bool assign(int k, int val) {
+        for (int i = 1; i <= 9; i++) {
+            if (i != val && !eliminate(k, i)) return false;
+        }
+        return true;
+    }
+
+    // 移除 k 处 cell 的备选 val
+    bool eliminate(int k, int val) {
+        if (!cells[k].on(val)) { return true; } // 已经移除过了
+        cells[k].eliminate(val); // 移除备选 val
+
+        // (1) If a square is reduced to one value v, then eliminate v from the peers.
+        int n = cells[k].count();
+        if (n == 0) { // 若移除 val 后 k 没有其他备选了，说明失败了
+            return false;
+        } else if (n == 1) { // 若移除 val 后 k 仅剩一个备选 v，那么 k 的邻居们就都不能放置 v 了
+            int v = cells[k].val();
+            for (auto i : helper->neighbors[k]) { // 尝试移除邻居们的备选元素 v
+                if (!eliminate(i, v)) { return false; } // 无法移除必然失败
+            }
+        }
+
+        // (2) If a unit u is reduced to only one place for a value val, then put it there.
+        for (auto g : helper->groups_of[k]) { // 遍历 k 所在的组
+            int n = 0, k1;
+            for (auto kk : helper->groups[g]) { // 遍历组内元素 kk
+                if (cells[kk].on(val)) { // 记录 val 在该组内出现的次数 n
+                    n++; k1 = kk; // 顺便记录仅能放置 val 的位置 k1
+                }
+            }
+            if (n == 0) { // k 所在的组内至少要出现一次 val
+                return false; // 否则不满足数独的特性：每个组内都要包含 1~9 等9个数字
+            } else if (n == 1) { // 若组内仅有一个位置 k1 可以放置 val了，尝试放置
+                if (!assign(k1, val)) { // 不能放置必然失败
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    bool parse_grid(std::string grid) {
+        if (grid.size() != 81) { return false; }
+        cells.clear();
+        cells.resize(81);
+        int k = 0;
+        for (auto c : grid) {
+            if ('1' <= c && c <= '9') {
+                if (!assign(k++, c - '0')) {
+                    return false;
+                }
+            } else if ('0' == c || '.' == c) {
+                k++;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static std::unique_ptr<Sudoku> search(std::unique_ptr<Sudoku> s) {
+        if (!s || s->is_solved()) { return s; }
+        int k = s->least_count();
+        auto p = s->possible(k);
+        for (int i = 1; i <= 9; i++) {
+            if (p.on(i)) {
+                std::unique_ptr<Sudoku> s1(new Sudoku(*s));
+                if (s1->assign(k, i)) {
+                    if (auto s2 = search(std::move(s1))) {
+                        return s2;
+                    }
+                }
+            }
+        }
+        return nullptr;
+    }
+
+    static std::unique_ptr<Sudoku> solve(std::string grid, std::unique_ptr<Sudoku> s = nullptr) {
+        if (!s) {
+            s = std::make_unique<Sudoku>();
+        }
+        if (!s->helper) {
+            s->helper = std::make_shared<Helper>();
+        }
+        if (!s->parse_grid(grid)) { return nullptr; }
+        auto ss = search(std::move(s));
+        return ss;
+    }
+};
+
+vector<std::string> from_file(std::string path) {
+    vector<std::string> res;
+    std::ifstream in(path);
+    if (in.is_open()) {
+        std::stringstream ss;
+        ss << in.rdbuf();
+        in.close();
+        auto content = ss.str();
+        size_t prev = 0;
+        auto pos = content.find_first_of('\n');
+        while (pos != content.npos && pos - prev >= 81) {
+            auto str = content.substr(prev, 81);
+            std::string board;
+            for (int i = 0; i < 9; i++) {
+                std::string line;
+                for (int j = 0; j < 9; j++) {
+                    int val = str[i * 9 + j];
+                    if ('1' <= val && val <= '9') {
+                        line.push_back(val);
+                    } else if (val == '.' || val == '0') {
+                        line.push_back('.');
+                    } else {
+                        return res;
+                    }
+                }
+                board += line;
+            }
+            res.push_back(board);
+            prev = pos + 1;
+            pos = content.find_first_of('\n', prev);
+        }
+    }
+    return res;
+}
+
+// show_if == -1 dont show board
+// show_if = ms >= 0, show board if sovle time exceeds ms
+void solve_all(vector<std::string> grids, std::string name = "", int show_if = 0) {
+    int total = 0, ok = 0;
+    long long ms = 0, max_ms = 0;
+    std::unique_ptr<Sudoku> sudoku;    
+    for (const auto& grid : grids) {
+        auto start = std::chrono::steady_clock::now();
+        sudoku = Sudoku::solve(grid, std::move(sudoku));
+        auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+        if (show_if != -1 && diff >= show_if) {
+            printf("%s\n", Sudoku::to_string(grid).c_str());
+            if (sudoku) {
+                printf("%s\n", sudoku->to_string().c_str());
+            } else {
+                printf("No solution\n");
+            }
+            printf("#%d of puzzle %s, cost %lldms\n", total + 1, name.c_str(), diff);
+        }
+        ms += diff;
+        if (diff > max_ms) { max_ms = diff; }
+        total++;
+        if (sudoku) { ok++; }
+    }
+
+    if (total > 0) {
+        printf("solved %d of %d %s puzzles, total %lldms, avg %.2fms, max %lldms\n", ok, total, name.c_str(), ms, ms * 1.0 / total, max_ms);
+    }
+}
+
+void test(int show_if = 0) {
+
+    std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
+    std::string grid2 = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......";
+    std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6.................."; // i7-8700 took 40s to solve
+
+    // /*std::unordered_map<std::string, std::unordered_set<char>> values;
+    //if (sudoku.solve(grid1, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(grid2, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(hard1, values)) {
+    //    sudoku.display(values);
+    //}*/
+
+    solve_all(std::vector<std::string>{grid1, grid2, hard1 }, "test");
+    solve_all(from_file("./easy50.txt"), "easy50", show_if);
+    solve_all(from_file("./top95.txt"), "top95", show_if);
+    solve_all(from_file("./hardest.txt"), "hardest", show_if);
+}
+
+}
+
 int main(int argc, char** argv)
 {
     //leetcode::test();
@@ -1627,9 +2246,16 @@ int main(int argc, char** argv)
     }
 
 #if (ENABLE_NORVIG_CPP && _HAS_CXX17)
-    norvig_cpp::test(show_if);
+    //norvig_cpp::test(show_if);
 #endif
 
     //norvig_cpp_without_std_optional::test(show_if);
+
+    {
+        //norgiv_cc::Sudoku::init();
+        //norgiv_cc::Sudoku::print();
+    }
+
+    norvig_cpp_optimize::test(show_if);
 }
 

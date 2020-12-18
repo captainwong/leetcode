@@ -74,3 +74,18 @@ solved 11 of 11 hardest puzzles, total 42ms, avg 3.82ms, max 15ms
 DETAILED: [norvig_no_optional_I5-4590.txt](./norvig_no_optional_I5-4590.txt)
 
 很奈斯啊！
+
+
+## norvig_cpp_optimize test result
+
+### I7-8700
+
+OVERALL:
+
+```
+solved 50 of 50 easy50 puzzles, total 0ms, avg 0.00ms, max 0ms
+solved 95 of 95 top95 puzzles, total 1ms, avg 0.01ms, max 1ms
+solved 11 of 11 hardest puzzles, total 0ms, avg 0.00ms, max 0ms
+```
+
+DETAILED: [norvig_cpp_optimize_I7-8700.txt](./norvig_cpp_optimize_I7-8700.txt)
