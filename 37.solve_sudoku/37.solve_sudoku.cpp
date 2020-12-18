@@ -1828,9 +1828,11 @@ void test(int show_if = 0) {
 
 // 在 norvig_cpp_without_std_optional 的基础上继续优化
 // 重度参考了 https://github.com/pauek/norvig-sudoku/blob/master/sudoku.en.cc
+// 移植到 LeetCode 上的表现：
+// 执行用时：16 ms, 在所有 C++ 提交中击败了40.04%的用户
+// 内存消耗：7.9 MB, 在所有 C++ 提交中击败了10.43%的用户
+// 已经针不戳了
 namespace norvig_cpp_optimize {
-
-
 
 class Sudoku {
 public:
