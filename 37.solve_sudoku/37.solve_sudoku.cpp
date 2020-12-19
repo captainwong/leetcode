@@ -2216,7 +2216,378 @@ void test(int show_if = 0) {
 
     std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
     std::string grid2 = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......";
-    std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6.................."; // i7-8700 took 40s to solve
+    std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6..................";
+
+    // /*std::unordered_map<std::string, std::unordered_set<char>> values;
+    //if (sudoku.solve(grid1, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(grid2, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(hard1, values)) {
+    //    sudoku.display(values);
+    //}*/
+
+    solve_all(std::vector<std::string>{grid1, grid2, hard1 }, "test");
+    solve_all(from_file("./easy50.txt"), "easy50", show_if);
+    solve_all(from_file("./top95.txt"), "top95", show_if);
+    solve_all(from_file("./hardest.txt"), "hardest", show_if);
+}
+
+}
+
+// 继续在 norvig_cpp_optimize 的基础上优化为 C 版本
+namespace norvig_c {
+
+const int N = 81;
+const int NEIGHBORS = 20;
+const int GROUPS_OF = 3;
+const int GROUPS = 27;
+
+bool Cells[N][9]; // 81 格，每格初始有9种选择，值为 false 表示已经消除过了
+int neighbors[N][NEIGHBORS]; // 每格有20个邻居
+int groups_of[N][GROUPS_OF]; // 每格属于3个组
+int groups[GROUPS][9]; // 27个组 = 9行+9列+9块
+int spaces = 81; // 初始情况有81个未填空格
+
+// 第 k 个 cell 是否可以选择 val
+bool cell_on(bool cells[N][9], int k, int val) {
+    return cells[k][val - 1];
+}
+
+// 消除第 k 个 cell 的可选值 val
+void cell_eliminate(bool cells[N][9], int k, int val) {
+    cells[k][val - 1] = false;
+}
+
+// 找到第 k 个 cell 的第一个可选值
+int cell_val(bool cells[N][9], int k) {
+    for (int i = 0; i < 9; i++) {
+        if (cells[k][i]) {
+            return i + 1;
+        }
+    }
+    return -1;
+}
+
+// 计算第 k 个 cell 的可选数值数量
+int cell_count(bool cells[N][9], int k) {
+    int n = 0;
+    for (int i = 0; i < 9; i++) {
+        if (cells[k][i]) { n++; }
+    }
+    return n;
+}
+
+// 获取可选数量最少的 cell
+int least_cell_count(bool cells[N][9]) {
+    int k = -1, n;
+    for (int i = 0; i < N; i++) {
+        int nn = cell_count(cells, i);
+        if (nn > 1 && (k == -1 || nn < n)) {
+            k = i; n = nn;
+        }
+    }
+    return k;
+}
+
+bool solved(bool cells[N][9]) {
+    for (int k = 0; k < N; k++) {
+        if (cell_count(cells, k) != 1) { return false; }
+    }
+    return true;
+}
+
+// 初始化辅助结构体，用户调用 solve 之前手动调用一次即可
+void init() {
+    memset(neighbors, -1, sizeof(neighbors));
+    memset(groups, -1, sizeof(groups));
+    memset(groups_of, -1, sizeof(groups_of));
+
+    // (1) 初始化组: 每个cell都有3个组：同行，同列，同块
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            int k = i * 9 + j;
+            for (int g : {i, 9 + j, 18 + i / 3 * 3 + j / 3}) { // g: 组号
+                for (int gg = 0; gg < 9; gg++) {
+                    if (groups[g][gg] == k) { break; } // 去重
+                    if (groups[g][gg] == -1) {
+                        groups[g][gg] = k;
+                        break;
+                    }
+                }
+                for (int gg = 0; gg < GROUPS_OF; gg++) {
+                    if (groups_of[k][gg] == g) { break; } // 去重
+                    if (groups_of[k][gg] == -1) {
+                        groups_of[k][gg] = g;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // (2) 初始化邻居
+    for (int k = 0; k < N; k++) { // k: cells 下标
+        for (int i = 0; i < 3; i++) { 
+            int g = groups_of[k][i]; // g: 组号
+            for (int j = 0; j < 9; j++) { 
+                int kk = groups[g][j]; // kk: 组内 cell 下标
+                if (kk != k) {
+                    for (int n = 0; n < NEIGHBORS; n++) {
+                        if (neighbors[k][n] == kk) { break; } // 去重
+                        if (neighbors[k][n] == -1) {
+                            neighbors[k][n] = kk;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+bool eliminate(bool cells[N][9], int k, int val);
+
+bool assign(bool cells[N][9], int k, int val) {
+    for (int i = 1; i <= 9; i++) {
+        if (i != val) {
+            if (!eliminate(cells, k, i)) {
+                return false;
+            }
+        }
+    }
+    spaces--;
+    return true;
+}
+
+bool eliminate(bool cells[N][9], int k, int val) {
+    if (!cell_on(cells, k, val)) { return true; }
+    cell_eliminate(cells, k, val);
+
+    // (1) If a square is reduced to one value v, then eliminate v from the peers.
+    int n = cell_count(cells, k);
+    if (n == 0) { // 若移除 val 后 k 没有其他备选了，说明失败了
+        return false;
+    } else if (n == 1) { // 若移除 val 后 k 仅剩一个备选 v，那么 k 的邻居们就都不能放置 v 了
+        int v = cell_val(cells, k);
+        for (int i = 0; i < NEIGHBORS; i++) { // 尝试移除邻居们的备选元素 v
+            if (!eliminate(cells, neighbors[k][i], v)) {  // 无法移除必然失败
+                return false;
+            }
+        }
+    }
+
+    // (2) If a unit u is reduced to only one place for a value val, then put it there.
+    for (int i = 0; i < GROUPS_OF; i++) { // 遍历 k 所在的组
+        int g = groups_of[k][i];
+        int n = 0, k1;
+        for (int j = 0; j < 9; j++) { // 遍历组内元素 kk
+            int kk = groups[g][j];
+            if (cell_on(cells, kk, val)) { // 记录 val 在该组内出现的次数 n
+                n++; k1 = kk; // 顺便记录仅能放置 val 的位置 k1
+            }
+        }
+        if (n == 0) { // k 所在的组内至少要出现一次 val
+            return false; // 否则不满足数独的特性：每个组内都要包含 1~9 等9个数字
+        } else if (n == 1) { // 若组内仅有一个位置 k1 可以放置 val了，尝试放置
+            if (!assign(cells, k1, val)) { // 不能放置必然失败
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool read_grid(const char* grid) {
+    if (!grid || strlen(grid) != 81) { return false; }
+    memset(Cells, true, sizeof(Cells));
+    spaces = 81;
+    for (int i = 0; i < 81; i++) {
+        if ('1' <= grid[i] && grid[i] <= '9') {
+            if (!assign(Cells, i, grid[i] - '0')) {
+                return false;
+            }
+        } else if ('0' == grid[i] || '.' == grid[i]) {
+
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool search(bool cells[N][9]) {
+    if (solved(cells)) { return true; }
+    int k = least_cell_count(cells);
+    for (int val = 1; val <= 9; val++) {
+        if (cell_on(cells, k, val)) {
+            bool cells1[N][9];
+            memcpy(cells1, cells, sizeof(cells1));
+            if (assign(cells1, k, val)) {
+                if (search(cells1)) {
+                    memcpy(cells, cells1, sizeof(cells1));
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool solve(const char* grid) {
+    if (!read_grid(grid)) {
+        return false;
+    }
+    return search(Cells);
+}
+
+void print_members() {
+    printf("%s:[\n", "groups");
+    for (int i = 0; i < 27; i++) {
+        printf("#%2d:[", i);
+        for (int j = 0; j < 9; j++) {
+            printf("%2d, ", groups[i][j]);
+        }
+        printf("],\n");
+    }
+    printf("]\n");
+
+    printf("%s:[\n", "groups_of");
+    for (int i = 0; i < 81; i++) {
+        printf("#%2d:[", i);
+        for (int j = 0; j < 3; j++) {
+            printf("%2d, ", groups_of[i][j]);
+        }
+        printf("],\n");
+    }
+    printf("]\n");
+
+    printf("%s:[\n", "neighbors");
+    for (int i = 0; i < 81; i++) {
+        printf("#%2d:[", i);
+        for (int j = 0; j < 20; j++) {
+            printf("%2d, ", neighbors[i][j]);
+        }
+        printf("],\n");
+    }
+    printf("]\n");
+}
+vector<std::string> from_file(std::string path) {
+    vector<std::string> res;
+    std::ifstream in(path);
+    if (in.is_open()) {
+        std::stringstream ss;
+        ss << in.rdbuf();
+        in.close();
+        auto content = ss.str();
+        size_t prev = 0;
+        auto pos = content.find_first_of('\n');
+        while (pos != content.npos && pos - prev >= 81) {
+            auto str = content.substr(prev, 81);
+            std::string board;
+            for (int i = 0; i < 9; i++) {
+                std::string line;
+                for (int j = 0; j < 9; j++) {
+                    int val = str[i * 9 + j];
+                    if ('1' <= val && val <= '9') {
+                        line.push_back(val);
+                    } else if (val == '.' || val == '0') {
+                        line.push_back('.');
+                    } else {
+                        return res;
+                    }
+                }
+                board += line;
+            }
+            res.push_back(board);
+            prev = pos + 1;
+            pos = content.find_first_of('\n', prev);
+        }
+    }
+    return res;
+}
+
+void print_cells(bool cells[N][9]) {
+    int width = 1;
+    for (int i = 0; i < N; i++) {
+        width = std::max(width, 1 + cell_count(cells, i));
+    }
+    const std::string wfm = "%" + std::to_string(width) + "d";
+    const std::string sep(3 * width, '-');
+    const std::string sepline = sep + "+" + sep + "+" + sep;
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            printf(wfm.c_str(), cell_val(cells, i * 9 + j));
+            if (j == 2 || j == 5) {
+                printf("|");
+            }
+        }
+        printf("\n");
+        if (i == 2 || i == 5) {
+            printf("%s\n", sepline.c_str());
+        }
+    }
+    printf("\n");
+}
+
+void print_grid(const char* grid) {
+    const std::string sep(6, '-');
+    const std::string sepline = sep + "+" + sep + "+" + sep;
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            printf("%c ", (grid[i * 9 + j] != '0' ? grid[i * 9 + j] : '.'));
+            if (j == 2 || j == 5) {
+                printf("|");
+            }
+        }
+        printf("\n");
+        if (i == 2 || i == 5) {
+            printf("%s\n", sepline.c_str());
+        }
+    }
+    printf("\n");
+}
+
+
+// show_if == -1 dont show board
+// show_if = ms >= 0, show board if sovle time exceeds ms
+void solve_all(vector<std::string> grids, std::string name = "", int show_if = 0) {
+    int total = 0, ok = 0;
+    long long ms = 0, max_ms = 0;
+    for (const auto& grid : grids) {
+        auto start = std::chrono::steady_clock::now();
+        bool pass = solve(grid.c_str());
+        auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+        if (show_if != -1 && diff >= show_if) {
+            print_grid(grid.c_str());
+            if (pass) {
+                print_cells(Cells);
+            } else {
+                printf("No solution\n");
+            }
+            printf("#%d of puzzle %s, cost %lldms\n", total + 1, name.c_str(), diff);
+        }
+        ms += diff;
+        if (diff > max_ms) { max_ms = diff; }
+        total++;
+        if (pass) { ok++; }
+    }
+
+    if (total > 0) {
+        printf("solved %d of %d %s puzzles, total %lldms, avg %.2fms, max %lldms\n", ok, total, name.c_str(), ms, ms * 1.0 / total, max_ms);
+    }
+}
+
+void test(int show_if = 0) {
+    init();
+    print_members();
+
+    std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
+    std::string grid2 = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......";
+    std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6..................";
 
     // /*std::unordered_map<std::string, std::unordered_set<char>> values;
     //if (sudoku.solve(grid1, values)) {
@@ -2259,6 +2630,8 @@ int main(int argc, char** argv)
         //norgiv_cc::Sudoku::print();
     }
 
-    norvig_cpp_optimize::test(show_if);
+    //norvig_cpp_optimize::test(show_if);
+
+    norvig_c::test(show_if);
 }
 

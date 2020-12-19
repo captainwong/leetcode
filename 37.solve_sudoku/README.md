@@ -104,3 +104,31 @@ solved 11 of 11 hardest puzzles, total 0ms, avg 0.00ms, max 0ms
 DETAILED: [norvig_cpp_optimize_I5-4590.txt](./norvig_cpp_optimize_I5-4590.txt)
 
 非常奈斯！
+
+
+## norvig_c test result
+
+继续优化为 `C` 版本
+
+
+### I7-8700
+
+OVERALL:
+
+```
+solved 50 of 50 easy50 puzzles, total 0ms, avg 0.00ms, max 0ms
+solved 95 of 95 top95 puzzles, total 0ms, avg 0.00ms, max 0ms
+solved 11 of 11 hardest puzzles, total 0ms, avg 0.00ms, max 0ms
+```
+
+DETAILED: [norvig_c_I7-8700.txt](./norvig_c_I7-8700.txt)
+
+
+### I5-4590
+
+OVERALL: 
+
+```
+```
+
+DETAILED: [norvig_c_I5-4590.txt](./norvig_c_I5-4590.txt)
