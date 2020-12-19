@@ -129,6 +129,15 @@ DETAILED: [norvig_c_I7-8700.txt](./norvig_c_I7-8700.txt)
 OVERALL: 
 
 ```
+solved 50 of 50 easy50 puzzles, total 0ms, avg 0.00ms, max 0ms
+solved 95 of 95 top95 puzzles, total 4ms, avg 0.04ms, max 1ms
+solved 11 of 11 hardest puzzles, total 0ms, avg 0.00ms, max 0ms
 ```
 
 DETAILED: [norvig_c_I5-4590.txt](./norvig_c_I5-4590.txt)
+
+目前我能做到的最佳解法了， LeetCode 测试结果：
+```
+执行用时：0 ms, 在所有 C++ 提交中击败了100.00%的用户
+内存消耗：6.7 MB, 在所有 C++ 提交中击败了45.52%的用户
+```
