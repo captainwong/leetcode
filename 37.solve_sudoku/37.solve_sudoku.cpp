@@ -2446,6 +2446,49 @@ bool solve(const char* grid) {
     return search(Cells);
 }
 
+std::string cells_to_string(bool cells[N][9]) {
+    std::string grid(81, '.');
+    for (int i = 0; i < N; i++) {
+        int val = cell_val(cells, i);
+        if (1 <= val && val <= 9) {
+            grid[i] = val + '0';
+        }
+    }
+    return grid;
+}
+
+typedef void(*OnSolved)(const std::string& grid);
+
+
+int search(bool cells[N][9], OnSolved on_solved, int solves, int max_solves) {
+    if (solved(cells)) { 
+        on_solved(cells_to_string(cells));
+        return ++solves;
+    }
+    int k = least_cell_count(cells);
+    for (int val = 1; val <= 9; val++) {
+        if (cell_on(cells, k, val)) {
+            bool cells1[N][9];
+            memcpy(cells1, cells, sizeof(cells1));
+            if (assign(cells1, k, val)) {
+                solves += search(cells1, on_solved, 0, max_solves);
+                if (max_solves != 0 && solves >= max_solves) {
+                    return solves;
+                }
+            }
+        }
+    }
+    return solves;
+}
+
+// max_solves, 0 for solve all solutions, > 0 for stop if reached
+int solve(const char* grid, OnSolved on_solved, int max_solves = 0) {
+    if (!read_grid(grid)) {
+        return 0;
+    }
+    return search(Cells, on_solved, 0, max_solves);
+}
+
 void print_members() {
     printf("%s:[\n", "groups");
     for (int i = 0; i < 27; i++) {
@@ -2553,13 +2596,13 @@ void print_grid(const char* grid) {
     printf("\n");
 }
 
-
 // show_if == -1 dont show board
 // show_if = ms >= 0, show board if sovle time exceeds ms
 void solve_all(vector<std::string> grids, std::string name = "", int show_if = 0) {
     int total = 0, ok = 0;
     long long ms = 0, max_ms = 0;
     for (const auto& grid : grids) {
+        std::vector<std::string> solved_gridss;
         auto start = std::chrono::steady_clock::now();
         bool pass = solve(grid.c_str());
         auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
@@ -2608,6 +2651,69 @@ void test(int show_if = 0) {
     solve_all(from_file("./hardest.txt"), "hardest", show_if);
 }
 
+
+
+std::vector<std::string> solved_gridss{};
+void on_solve(const std::string& grid) {
+    solved_gridss.push_back(grid);
+}
+
+void solve_all2(vector<std::string> grids, std::string name = "", int show_if = 0) {
+    int total = 0, ok = 0;
+    long long ms = 0, max_ms = 0;
+    for (const auto& grid : grids) {
+        solved_gridss.clear();
+        auto start = std::chrono::steady_clock::now();
+        int solves = solve(grid.c_str(), on_solve, 2); // 最多求2个解
+        auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+        if (show_if != -1 && diff >= show_if) {
+            print_grid(grid.c_str());
+            if (solves == 0) {
+                printf("#%d of puzzle %s has No solution\n", total + 1, name.c_str());
+            }else {
+                printf("#%d of puzzle %s has %s %d solutions:\n", total + 1, name.c_str(), solves > 1 ? "at least" : "", solves);
+                for (const auto& solved_grid : solved_gridss) {
+                    print_grid(solved_grid.c_str());
+                }
+            }
+            printf("#%d of puzzle %s, cost %lldms\n", total + 1, name.c_str(), diff);
+        }
+        ms += diff;
+        if (diff > max_ms) { max_ms = diff; }
+        total++;
+        if (solves) { ok++; }
+    }
+
+    if (total > 0) {
+        printf("solved %d of %d %s puzzles, total %lldms, avg %.2fms, max %lldms\n", ok, total, name.c_str(), ms, ms * 1.0 / total, max_ms);
+    }
+}
+
+void test2(int show_if = 0) {
+    init();
+    print_members();
+
+    std::string grid1 = "003020600900305001001806400008102900700000008006708200002609500800203009005010300";
+    std::string grid2 = "4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......";
+    std::string hard1 = ".....6....59.....82....8....45........3........6..3.54...325..6.................."; // 924ms on i7-8700, 1400ms on i5-4590
+
+    // /*std::unordered_map<std::string, std::unordered_set<char>> values;
+    //if (sudoku.solve(grid1, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(grid2, values)) {
+    //    sudoku.display(values);
+    //}
+    //if (sudoku.solve(hard1, values)) {
+    //    sudoku.display(values);
+    //}*/
+
+    solve_all2(std::vector<std::string>{grid1, grid2, hard1 }, "test");
+    solve_all2(from_file("./easy50.txt"), "easy50", show_if);
+    solve_all2(from_file("./top95.txt"), "top95", show_if);
+    solve_all2(from_file("./hardest.txt"), "hardest", show_if);
+}
+
 }
 
 int main(int argc, char** argv)
@@ -2634,6 +2740,6 @@ int main(int argc, char** argv)
 
     //norvig_cpp_optimize::test(show_if);
 
-    norvig_c::test(show_if);
+    norvig_c::test2(show_if);
 }
 
