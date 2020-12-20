@@ -8,6 +8,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include <memory>
+#include <random>
 #include <stdint.h>
 
 //
@@ -2462,7 +2463,9 @@ typedef void(*OnSolved)(const std::string& grid);
 
 int search(bool cells[N][9], OnSolved on_solved, int solves, int max_solves) {
     if (solved(cells)) { 
-        on_solved(cells_to_string(cells));
+        if (on_solved) {
+            on_solved(cells_to_string(cells));
+        }
         return ++solves;
     }
     int k = least_cell_count(cells);
@@ -2487,6 +2490,76 @@ int solve(const char* grid, OnSolved on_solved, int max_solves = 0) {
         return 0;
     }
     return search(Cells, on_solved, 0, max_solves);
+}
+
+// 随机获取可选数量最少的 cell
+int random_least_cell_count(bool cells[N][9]) {
+    int n = 9;
+    int ks[N], ki = 0;
+    for (int i = 0; i < N; i++) {
+        int nn = cell_count(cells, i);
+        if (nn > 1) {
+            if (nn < n) {
+                n = nn;
+                ki = 0;
+                ks[ki++] = i;
+            } else if (nn == n) {
+                ks[ki++] = i;
+            }
+        }
+    }
+    return ks[rand() % ki];
+}
+
+bool random_search(bool cells[N][9]) {
+    if (solved(cells)) { return true; }
+    int k = random_least_cell_count(cells);
+    for (int val = 1; val <= 9; val++) {
+        if (cell_on(cells, k, val)) {
+            bool cells1[N][9];
+            memcpy(cells1, cells, sizeof(cells1));
+            if (assign(cells1, k, val)) {
+                if (search(cells1)) {
+                    memcpy(cells, cells1, sizeof(cells1));
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+// 随机生成一个已解决的（所有数字已经填满的）数独
+std::string random_solved_puzzle() {
+    bool cells[N][9];
+    memset(cells, true, sizeof(cells));
+    if (random_search(cells)) {
+        return cells_to_string(cells);
+    } else {
+        return random_solved_puzzle();
+    }
+}
+
+std::string random_puzzle() {
+    auto solved_grid = random_solved_puzzle();
+    std::vector<int> random_N = []() {
+        std::vector<int> n(N, 0); 
+        for (int i = 0; i < N; i++) { n[i] = i; } 
+        std::shuffle(n.begin(), n.end(), std::default_random_engine());
+        return n; 
+    }();
+    
+    for (auto k : random_N) {
+        char old = solved_grid[k];
+        solved_grid[k] = '.'; // 挖洞
+        if (solve(solved_grid.c_str(), nullptr, 2) > 1) { // 有多解则恢复，继续挖
+            solved_grid[k] = old;
+        }
+    }
+    if (solve(solved_grid.c_str(), nullptr, 2) == 1) {
+        return solved_grid;
+    }
+    return random_puzzle();
 }
 
 void print_members() {
@@ -2689,6 +2762,15 @@ void solve_all2(vector<std::string> grids, std::string name = "", int show_if = 
     }
 }
 
+std::vector<std::string> random_puzzle(int max_puzzle) {
+    srand(time(nullptr));
+    std::vector<std::string> puzzles;
+    for (int i = 0; i < max_puzzle; i++) {
+        puzzles.push_back(random_puzzle());
+    }
+    return puzzles;
+}
+
 void test2(int show_if = 0) {
     init();
     print_members();
@@ -2708,13 +2790,16 @@ void test2(int show_if = 0) {
     //    sudoku.display(values);
     //}*/
 
-    solve_all2(std::vector<std::string>{grid1, grid2, hard1 }, "test");
-    solve_all2(from_file("./easy50.txt"), "easy50", show_if);
-    solve_all2(from_file("./top95.txt"), "top95", show_if);
-    solve_all2(from_file("./hardest.txt"), "hardest", show_if);
+    //solve_all2(std::vector<std::string>{grid1, grid2, hard1 }, "test");
+    //solve_all2(from_file("./easy50.txt"), "easy50", show_if);
+    //solve_all2(from_file("./top95.txt"), "top95", show_if);
+    //solve_all2(from_file("./hardest.txt"), "hardest", show_if);
+    solve_all2(random_puzzle(99), "random", show_if);
 }
 
 }
+
+
 
 int main(int argc, char** argv)
 {
