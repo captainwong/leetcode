@@ -23,6 +23,7 @@
     <ProjectGuid>{0DABF87A-3140-4225-80FE-60383036BCC6}</ProjectGuid>
     <RootNamespace>My67addbinary</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>067.add_binary</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

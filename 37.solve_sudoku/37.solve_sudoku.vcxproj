@@ -24,6 +24,7 @@
     <ProjectGuid>{87da6273-c859-49fe-9031-43b9b9b03bc1}</ProjectGuid>
     <RootNamespace>My37solvesudoku</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>037.solve_sudoku</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

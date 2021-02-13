@@ -8,9 +8,9 @@ using namespace std;
 string licenseKeyFormatting(string S, int K) {
     reverse(S.begin(), S.end());
     int i = 0;
-    for (auto iter = S.rbegin(); iter != S.rend(); ) {
-        while (iter != S.rend() && *iter == '-') {
-            iter = S.reriter);
+    for (auto iter = S.begin(); iter != S.end(); ) {
+        while (iter != S.end() && *iter == '-') {
+            iter = S.erase(iter);
         }
         if (iter == S.end()) { break; }
         *iter = toupper(*iter);
