@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4e9c2764-c04f-4b9e-bc8b-1854db661afd}</ProjectGuid>
-    <RootNamespace>My671secondminimumnodeinabinarytree</RootNamespace>
+    <ProjectGuid>{9ac71cfe-81fb-4a1c-971e-1e91ee794565}</ProjectGuid>
+    <RootNamespace>My783minimumdistancebetweenbstnodes</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -139,7 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="671.second-minimum-node-in-a-binary-tree.cpp" />
+    <ClCompile Include="783.minimum-distance-between-bst-nodes.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
