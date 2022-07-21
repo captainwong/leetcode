@@ -22,9 +22,71 @@ Input: "pwwkew"
 Output: 3
 Explanation: The answer is "wke", with the length of 3.
 			 Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
+
+Constraints:
+0 <= s.length <= 5 * 10^4
+s consists of English letters, digits, symbols and spaces.
+
+来源：力扣（LeetCode）
+链接：https://leetcode.cn/problems/longest-substring-without-repeating-characters
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 */
 
-#include "pch.h"
+#if 1
+
+/*
+执行用时：0 ms, 在所有 C 提交中击败了100.00%的用户
+内存消耗：5.6 MB, 在所有 C 提交中击败了92.25%的用户
+*/
+
+
+#include <stdio.h>
+#include <string.h>
+#include <assert.h>
+
+char sub[50001];
+
+int indexof(char* s, int slen, char c) {
+	int pos = 0;
+	char* end = s + slen;
+	while (s < end && *s) {
+		if (*s++ == c) {
+			return pos;
+		}
+		pos++;
+	}
+	return -1;
+}
+
+
+int lengthOfLongestSubstring(const char* s) {
+	int l1 = 0;
+	int l2 = 0;
+	while (*s) {
+		int pos = indexof(sub, l1, *s);
+		if (pos != -1) {
+			if (l1 > l2) {
+				l2 = l1;
+			}
+			memmove(sub, sub + pos + 1, l1 - pos - 1);
+			l1 -= pos + 1;
+		}
+		sub[l1++] = *s++;
+	}
+
+	return l1 > l2 ? l1 : l2;
+}
+
+int main()
+{
+	assert(lengthOfLongestSubstring("abcabcbb") == 3);
+	assert(lengthOfLongestSubstring("bbbbb") == 1);
+	assert(lengthOfLongestSubstring("pwwkew") == 3);
+	assert(lengthOfLongestSubstring("dvdf") == 3);
+}
+
+#else
+
 #include <iostream>
 #include <string>
 #include <cassert>
@@ -78,13 +140,4 @@ int main()
 	system("pause");
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+#endif

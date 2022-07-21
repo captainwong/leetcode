@@ -1,7 +1,59 @@
 // 1.two-sum.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "pch.h"
+#if 1
+#include <stdlib.h>
+
+#if 0
+
+/*
+执行用时：80 ms, 在所有 C 提交中击败了71.77%的用户
+内存消耗：6.2 MB, 在所有 C 提交中击败了72.36%的用户
+*/
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    for (int i = 0; i < numsSize; i++) {
+        for (int j = i + 1; j < numsSize; j++) {
+            if (nums[i] + nums[j] == target) {
+                int* arr = (int*)malloc(sizeof(int) * 2);
+                if (!arr) { return NULL; }
+                arr[0] = i;
+                arr[1] = j;
+                *returnSize = 2;
+                return arr;
+            }
+        }
+    }
+    return NULL;
+}
+
+int main()
+{
+
+}
+
+#else
+
+// TODO: use hash table
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    
+    return NULL;
+}
+
+int main()
+{
+
+}
+#endif
+
+#else
 #include <iostream>
 
 // https://leetcode-cn.com/problems/two-sum/
@@ -48,14 +100,4 @@ int main()
 {
     
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+#endif
