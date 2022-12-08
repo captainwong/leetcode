@@ -136,6 +136,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "009.palindrome-number", "00
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "006.zigzag-conversion", "006.zigzag-conversion\006.zigzag-conversion.vcxproj", "{8C540896-4397-49A9-A950-3DFD191C8E7B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "628.maximum-product-of-three-numbers", "628.maximum-product-of-three-numbers\628.maximum-product-of-three-numbers.vcxproj", "{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "728.self-dividing-numbers", "728.self-dividing-numbers\728.self-dividing-numbers.vcxproj", "{E66C02E2-9E31-4384-A1B0-0972EE088BD6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "762.prime-number-of-set-bits-in-binary-representation", "762.prime-number-of-set-bits-in-binary-representation\762.prime-number-of-set-bits-in-binary-representation.vcxproj", "{B0433AA4-C944-4536-A272-AEADB77B9E7E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "812.largest-triangle-area", "812.largest-triangle-area\812.largest-triangle-area.vcxproj", "{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -608,6 +616,38 @@ Global
 		{8C540896-4397-49A9-A950-3DFD191C8E7B}.Release|x64.Build.0 = Release|x64
 		{8C540896-4397-49A9-A950-3DFD191C8E7B}.Release|x86.ActiveCfg = Release|Win32
 		{8C540896-4397-49A9-A950-3DFD191C8E7B}.Release|x86.Build.0 = Release|Win32
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Debug|x64.ActiveCfg = Debug|x64
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Debug|x64.Build.0 = Debug|x64
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Debug|x86.ActiveCfg = Debug|Win32
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Debug|x86.Build.0 = Debug|Win32
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Release|x64.ActiveCfg = Release|x64
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Release|x64.Build.0 = Release|x64
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Release|x86.ActiveCfg = Release|Win32
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4}.Release|x86.Build.0 = Release|Win32
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Debug|x64.ActiveCfg = Debug|x64
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Debug|x64.Build.0 = Debug|x64
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Debug|x86.ActiveCfg = Debug|Win32
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Debug|x86.Build.0 = Debug|Win32
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Release|x64.ActiveCfg = Release|x64
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Release|x64.Build.0 = Release|x64
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Release|x86.ActiveCfg = Release|Win32
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6}.Release|x86.Build.0 = Release|Win32
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Debug|x64.ActiveCfg = Debug|x64
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Debug|x64.Build.0 = Debug|x64
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Debug|x86.ActiveCfg = Debug|Win32
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Debug|x86.Build.0 = Debug|Win32
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Release|x64.ActiveCfg = Release|x64
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Release|x64.Build.0 = Release|x64
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Release|x86.ActiveCfg = Release|Win32
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E}.Release|x86.Build.0 = Release|Win32
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Debug|x64.ActiveCfg = Debug|x64
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Debug|x64.Build.0 = Debug|x64
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Debug|x86.ActiveCfg = Debug|Win32
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Debug|x86.Build.0 = Debug|Win32
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Release|x64.ActiveCfg = Release|x64
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Release|x64.Build.0 = Release|x64
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Release|x86.ActiveCfg = Release|Win32
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -671,6 +711,10 @@ Global
 		{0910C66D-8B0E-42A2-A086-BCF6970CD71D} = {F0B71AB4-629C-4678-B9BC-46DDA68CB54F}
 		{EDFF22AC-D27A-4247-8A2E-E0813C9201FF} = {29966FEF-7A4A-4CF4-929D-D4B09AC7B2B5}
 		{8C540896-4397-49A9-A950-3DFD191C8E7B} = {F0B71AB4-629C-4678-B9BC-46DDA68CB54F}
+		{58A4CEDC-B48B-44A7-91C3-C7F2E2C71DE4} = {29966FEF-7A4A-4CF4-929D-D4B09AC7B2B5}
+		{E66C02E2-9E31-4384-A1B0-0972EE088BD6} = {29966FEF-7A4A-4CF4-929D-D4B09AC7B2B5}
+		{B0433AA4-C944-4536-A272-AEADB77B9E7E} = {29966FEF-7A4A-4CF4-929D-D4B09AC7B2B5}
+		{FEF37FC2-0B0F-4E46-AA88-2C30EF256B1B} = {29966FEF-7A4A-4CF4-929D-D4B09AC7B2B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BA3ED535-D7D7-460A-8A26-E534EE793209}

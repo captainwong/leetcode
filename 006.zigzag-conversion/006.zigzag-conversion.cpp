@@ -40,7 +40,7 @@ public:
 
 #else
 
-#define ver 2
+#define ver 4
 
 #if ver == 1
 /*
@@ -125,6 +125,56 @@ char* convert(char* s, int numRows) {
     }
     res[slen] = '\0';
     return res;
+}
+
+#elif ver==3
+
+// 官方题解方法二：压缩矩阵空间
+/*
+t = r + r - 2 = 2r - 2
+半周期 t/2 = r-1
+每个周期占用矩阵的 1 + r - 2 = r - 1 列
+*/
+
+/*
+执行用时：8 ms, 在所有 C 提交中击败了65.01%的用户
+内存消耗：7.1 MB, 在所有 C 提交中击败了49.01%的用户
+*/
+
+
+char res[1001];
+typedef struct Str {
+    char s[1001];
+    int len;
+}Str;
+
+Str lines[1000];
+
+char* convert(char* s, int numRows) {
+    int slen = strlen(s);
+    if (numRows < 2 || numRows >= slen) return s;
+    for (int i = 0; i < numRows; i++) {
+        lines[i].len = 0;
+    }
+
+    for (int i = 0, line = 0, t = numRows * 2 - 2; i < slen; i++) {
+        lines[line].s[lines[line].len++] = s[i];
+        i % t < numRows - 1 ? ++line : --line; // i%t < 半周期=r-1 则向下，否则向右上
+    }
+    slen = 0;
+    for (int i = 0; i < numRows; i++) {
+        memcpy(res + slen, lines[i].s, lines[i].len);
+        slen += lines[i].len;
+    }
+    res[slen] = '\0';
+    return res;
+}
+
+#elif ver == 4
+// 官方题解 方法3 直接构造
+
+char* convert(char* s, int numRows) {
+
 }
 
 #endif
